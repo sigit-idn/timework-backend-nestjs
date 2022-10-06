@@ -7,7 +7,7 @@ import { Role } from '../../../enums/role';
  */
 export class EmployeeData {
     @ApiProperty({ description: 'id', example: 1 })
-    public id: number;
+    public id: string;
 
     @ApiProperty({ description: 'name', example: 'Admin' })
     public name: string;

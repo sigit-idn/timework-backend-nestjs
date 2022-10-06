@@ -1,23 +1,45 @@
-import { Injectable              } from '@nestjs/common';
-import { InjectRepository        } from '@nestjs/typeorm';
-import { Repository              } from 'typeorm';
-import { Role                    } from '../../../enums/role';
-import { Employee, EmployeeInput } from '../model';
+import { Injectable, PreconditionFailedException                } from '@nestjs/common';
+import { InjectRepository          } from '@nestjs/typeorm';
+import { FindCondition, Repository } from 'typeorm';
+import { Role                      } from '../../../enums/role';
+import { Employee, EmployeeInput   } from '../model';
 
 /**
  * @class EmployeeService
  * @description Employee service is used to handle all employee related business logic
  */
-@Injectable() // Decorator Injectable is used to inject the service into the controller
+@Injectable()
 export class EmployeeService {
 
     public constructor(
-        @InjectRepository(Employee) // Inject the repository into the service
+        @InjectRepository(Employee)
         private readonly employeeRepository: Repository<Employee>
     ) { }
 
-    public async find(): Promise<Employee[]> {
-        return this.employeeRepository.find();
+    /**
+     * @method find
+     * @description Find all employees
+     * @param {FindCondition<Employee>} where
+     * @returns {Promise<Employee[]>}
+     */
+    public async find(where?: FindCondition<Employee>): Promise<Employee[]> {
+        return this.employeeRepository.find({ where });
+    }
+
+    /**
+     * @method findOne
+     * @description Find one employee by id
+     * @param {string} id
+     * @returns {Promise<Employee>}
+     */
+    public async findOne(id: string): Promise<Employee> {
+        const employee = await this.employeeRepository.findOne(id);
+
+        if (!employee) {
+            throw new PreconditionFailedException('Employee not found');
+        }
+
+        return employee;
     }
 
     public async create(input: EmployeeInput): Promise<Employee> {

@@ -76,7 +76,7 @@ export class Employee {
 //   }
 
     @PrimaryGeneratedColumn()
-    public id: number;
+    public id: string;
 
     @Column({ name: 'name', type: 'varchar', length: Employee.NAME_LENGTH })
     public name: string;
