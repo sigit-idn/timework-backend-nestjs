@@ -11,7 +11,7 @@ export class EmployeeGuard implements CanActivate {
 
         if (!payload) return false;
 
-        return (payload.role === Role.EMPLOYEE);
+        return Object.values(Role).includes(payload.role); // employee, admin, superadmin can access
     }
 
 }

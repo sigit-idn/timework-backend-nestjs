@@ -1,11 +1,12 @@
 import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags  } from '@nestjs/swagger';
-import { FindCondition                        } from 'typeorm';
-import { Config, LoggerService, EmployeeGuard } from '../../common';
-import { Service                              } from '../../tokens';
-import { AttendancePipe                       } from '../flow';
-import { Attendance, AttendanceData           } from '../model';
-import { AttendanceService                    } from '../service';
+import { Config, LoggerService               } from '../../common';
+import { EmployeeGuard                       } from '../../common/security';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FindCondition                       } from 'typeorm';
+import { Service                             } from '../../tokens';
+import { AttendancePipe                      } from '../flow';
+import { Attendance, AttendanceData          } from '../model';
+import { AttendanceService                   } from '../service';
 
 /**
  * @class AttendanceController

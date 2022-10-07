@@ -11,7 +11,7 @@ export class AdminGuard implements CanActivate {
 
         if (!payload) return false;
 
-        return (payload.role === Role.ADMIN);
+        return [Role.ADMIN, Role.SUPERADMIN].includes(payload.role); // admin, superadmin can access
     }
 
 }

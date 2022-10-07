@@ -4,6 +4,7 @@ import { AttendanceModule } from './attendance/attendance.module';
 import { AuthModule       } from './auth/auth.module';
 import { CommonModule     } from './common';
 import { EmployeeModule   } from './employee/employee.module';
+import { ReportModule     } from './report/report.module';
 
 @Module({
     imports: [
@@ -11,6 +12,7 @@ import { EmployeeModule   } from './employee/employee.module';
         TypeOrmModule.forRoot(),
         EmployeeModule,
         AttendanceModule,
+        ReportModule,
         AuthModule
     ]
 })

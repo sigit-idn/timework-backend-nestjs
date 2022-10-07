@@ -1,12 +1,12 @@
 import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags  } from '@nestjs/swagger';
-import { FindCondition                        } from 'typeorm';
-import { Config, LoggerService, EmployeeGuard } from '../../common';
-import { AdminGuard                           } from '../../common/security/admin.guard';
-import { Service                              } from '../../tokens';
-import { EmployeePipe                         } from '../flow';
-import { Employee, EmployeeData               } from '../model';
-import { EmployeeService                      } from '../service';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FindCondition                       } from 'typeorm';
+import { Config, LoggerService               } from '../../common';
+import { EmployeeGuard, AdminGuard,          } from '../../common/security';
+import { Service                             } from '../../tokens';
+import { EmployeePipe                        } from '../flow';
+import { Employee, EmployeeData              } from '../model';
+import { EmployeeService                     } from '../service';
 
 /**
  * @class EmployeeController
@@ -14,8 +14,8 @@ import { EmployeeService                      } from '../service';
  */
 @Controller('employees')
 @ApiTags('employee')
-@UseGuards(EmployeeGuard)
 @ApiBearerAuth()
+@UseGuards(EmployeeGuard)
 export class EmployeeController {
 
     public constructor(
@@ -73,8 +73,8 @@ export class EmployeeController {
      * @returns {Promise<EmployeeData>}
      */
     @Post()
-    @UseGuards(AdminGuard)
     @ApiResponse({ status: HttpStatus.CREATED, type: EmployeeData })
+    @UseGuards(AdminGuard)
     public async create(@Body(EmployeePipe) input: Employee): Promise<EmployeeData> {
 
         if (this.config.EMPLOYEES_ALLOWED === 'no') {
@@ -94,8 +94,8 @@ export class EmployeeController {
      * @returns {Promise<EmployeeData>}
      */
     @Put(':id')
-    @UseGuards(AdminGuard)
     @ApiResponse({ status: HttpStatus.OK, type: EmployeeData })
+    @UseGuards(AdminGuard)
     public async update(
         @Param() { id }: Employee,
         @Body(EmployeePipe) { id: employeeId, ...input }: Employee)

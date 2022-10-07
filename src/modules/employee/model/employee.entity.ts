@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { EmployeeData                           } from '.';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { EmployeeData                                      } from '.';
+import { Attendance                                        } from '../../attendance/model';
+import { Report                                            } from '../../report/model';
 
 /**
  * @class Employee
@@ -56,6 +58,11 @@ export class Employee {
     @Column({ name: 'updatedAt', type: 'varchar', default: () => 'now()' })
     public updatedAt: string;
 
+    @OneToMany(_type => Attendance, attendance => attendance.employeeId)
+    public attendances: Attendance[];
+
+    @OneToMany(_type => Report, report => report.employeeId)
+    public reports: Report[];
 
     public buildData(): EmployeeData {
 
