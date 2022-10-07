@@ -1,11 +1,11 @@
-import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags    } from '@nestjs/swagger';
-import { FindCondition                          } from 'typeorm';
-import { Config, LoggerService, RestrictedGuard } from '../../common';
-import { Service                                } from '../../tokens';
-import { EmployeePipe                           } from '../flow';
-import { Employee, EmployeeData, EmployeeInput  } from '../model';
-import { EmployeeService                        } from '../service';
+import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put } from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags  } from '@nestjs/swagger';
+import { FindCondition                        } from 'typeorm';
+import { Config, LoggerService, EmployeeGuard } from '../../common';
+import { Service                              } from '../../tokens';
+import { EmployeePipe                         } from '../flow';
+import { Employee, EmployeeData               } from '../model';
+import { EmployeeService                      } from '../service';
 
 /**
  * @class EmployeeController
@@ -48,13 +48,14 @@ export class EmployeeController {
      * @returns {Promise<EmployeeData>}
      */
     @Get(':id')
+    @UseGuards(EmployeeGuard)
     @ApiResponse({
         status     : HttpStatus.OK,
         description: 'Find one employee by id',
         type       : EmployeeData
     })
-    async findOne(@Param() { id }: EmployeeData): Promise<EmployeeData> {
-        const employee = await this.employeeService.findOne(id);
+    async findOne(@Param() { id }: Employee): Promise<EmployeeData> {
+        const employee = await this.employeeService.findOne({id});
         
 
         if (!employee) {
@@ -64,10 +65,16 @@ export class EmployeeController {
         return employee.buildData();
     }
 
+    /**
+     * @method create
+     * @description Create a new employee
+     * @param {Employee} input
+     * @returns {Promise<EmployeeData>}
+     */
     @Post()
-    @UseGuards(RestrictedGuard)
+    @UseGuards(EmployeeGuard)
     @ApiResponse({ status: HttpStatus.CREATED, type: EmployeeData })
-    public async create(@Body(EmployeePipe) input: EmployeeInput): Promise<EmployeeData> {
+    public async create(@Body(EmployeePipe) input: Employee): Promise<EmployeeData> {
 
         if (this.config.EMPLOYEES_ALLOWED === 'no') {
             throw new PreconditionFailedException(`Not allowed to onboard employees`);
@@ -75,6 +82,25 @@ export class EmployeeController {
 
         const employee = await this.employeeService.create(input);
         this.logger.info(`Created new employee with ID ${employee.id}`);
+
+        return employee.buildData();
+    }
+
+    /**
+     * @method update
+     * @description Update an existing employee
+     * @param {Employee} input
+     * @returns {Promise<EmployeeData>}
+     */
+    @Put(':id')
+    @UseGuards(EmployeeGuard)
+    @ApiResponse({ status: HttpStatus.OK, type: EmployeeData })
+    public async update(
+        @Param() { id }: Employee,
+        @Body(EmployeePipe) { id: employeeId, ...input }: Employee)
+    : Promise<EmployeeData> {
+        const employee = await this.employeeService.update({id, ...input} as Employee);
+        this.logger.info(`Updated employee with ID ${employee.id}`);
 
         return employee.buildData();
     }

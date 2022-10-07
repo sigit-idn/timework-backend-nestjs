@@ -1,8 +1,7 @@
 import * as Joi from 'joi';
-
 import { JoiValidationPipe } from '../../common';
-import { EmployeeInput } from '../model';
-import { Role } from '../../../enums/role';
+import { EmployeeInput     } from '../model';
+import { Role              } from '../../tokens';
 
 /**
  * @class EmployeePipe
@@ -19,7 +18,7 @@ export class EmployeePipe extends JoiValidationPipe {
             email    : Joi.string().required().email(),
             password : Joi.string().required(),
             position : Joi.string().required(),
-            role     : Joi.valid(Role).required(),
+            role     : Joi.valid(...Object.values(Role)).required(),
             companyId: Joi.string().required(),
             address  : Joi.string(),
             createdAt: Joi.string().default(new Date().toISOString()),

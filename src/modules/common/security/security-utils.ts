@@ -19,15 +19,9 @@ export function extractTokenPayload(request: Request): any | null {
     }
 
     try {
-
-        const env = process.env;
-        return jwt.verify(chunks[1], `${env.JWT_SECRET}`, {
-            algorithms: ['HS256'],
-            issuer: env.JWT_ISSUER
-        });
-
+        return jwt.verify(chunks[1], process.env.JWT_SECRET!);
     }
     catch (err) {
-        return null;
+        return console.error(err);
     }
 }

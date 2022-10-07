@@ -18,6 +18,8 @@ import { EmployeeService    } from './service';
     controllers: [
         EmployeeController
     ],
-    exports: []
+    exports: [
+        EmployeeService
+    ]
 })
 export class EmployeeModule { }

@@ -1,8 +1,8 @@
-import { Injectable, PreconditionFailedException                } from '@nestjs/common';
-import { InjectRepository          } from '@nestjs/typeorm';
-import { FindCondition, Repository } from 'typeorm';
-import { Role                      } from '../../../enums/role';
-import { Employee, EmployeeInput   } from '../model';
+import { Injectable, PreconditionFailedException } from '@nestjs/common';
+import { InjectRepository                        } from '@nestjs/typeorm';
+import { FindCondition, Repository               } from 'typeorm';
+import { Employee                                } from '../model';
+import { hash, genSalt                           } from 'bcrypt';
 
 /**
  * @class EmployeeService
@@ -28,12 +28,12 @@ export class EmployeeService {
 
     /**
      * @method findOne
-     * @description Find one employee by id
-     * @param {string} id
+     * @description Find one employee
+     * @param {FindCondition<Employee>} where
      * @returns {Promise<Employee>}
      */
-    public async findOne(id: string): Promise<Employee> {
-        const employee = await this.employeeRepository.findOne(id);
+    public async findOne(where: FindCondition<Employee>): Promise<Employee> {
+        const employee = await this.employeeRepository.findOne({ where });
 
         if (!employee) {
             throw new PreconditionFailedException('Employee not found');
@@ -42,22 +42,60 @@ export class EmployeeService {
         return employee;
     }
 
-    public async create(input: EmployeeInput): Promise<Employee> {
-
-        const employee = new Employee();
-
-        employee.name      = input.name;
-        employee.phone     = input.phone;
-        employee.email     = input.email;
-        employee.password  = input.password;
-        employee.position  = input.position;
-        employee.role      = input.role as Role
-        employee.companyId = input.companyId;
-        employee.address   = input.address;
-        employee.createdAt = input.createdAt;
-        employee.updatedAt = input.updatedAt;
+    /**
+     * @method create
+     * @description Create new employee
+     * @param {Employee} input
+     * @returns {Promise<Employee>}
+     */
+    public async create({password, ...input}: Employee): Promise<Employee> {
+        const employee = new Employee({
+            ...input,
+            password: await this.hashPassword(password)
+        })
 
         return this.employeeRepository.save(employee);
     }
 
+    /**
+     * @method update
+     * @description Update employee
+     * @param {Employee} input
+     * @returns {Promise<Employee>}
+     */
+    public async update({id, password, ...input}: Employee): Promise<Employee> {
+        const employee = await this.findOne({id});
+
+        employee.set({
+            id,
+            ...input,
+            password: password ? await this.hashPassword(password) : employee.password,
+        });
+
+        return employee;
+    }
+
+    /**
+     * @method delete
+     * @description Delete employee
+     * @param {Employee} input
+     * @returns {Promise<Employee>}
+     */
+    public async delete({id}: Employee): Promise<Employee> {
+        const employee = await this.findOne({id});
+
+        return this.employeeRepository.remove(employee);
+    }
+
+    /**
+     * @method hashPassword
+     * @description Hash password
+     * @param {string} password
+     * @returns {Promise<string>}
+     */
+    public async hashPassword(password: string): Promise<string> {
+        const salt = await genSalt(10);
+
+        return hash(password, salt);
+    }
 }

@@ -1,6 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { EmployeeData } from '.';
-import { Role } from '../../../enums/role';
+import { EmployeeData                           } from '.';
 
 /**
  * @class Employee
@@ -8,74 +7,23 @@ import { Role } from '../../../enums/role';
  */
 @Entity({ name: 'employee' })
 export class Employee {
+    constructor(...data: Partial<Employee>[]) {
+        Object.assign(this, ...data);
+    }
+
+    /**
+     * @method set
+     * @description Set employee data
+     * @param {EmployeeData} data
+     * @returns {void}
+     */
+    public set(data: EmployeeData): void {
+        Object.assign(this, data);
+    }
 
     public static readonly NAME_LENGTH = 50;
-// model Employee {
-//     id          String       @id @default(cuid()) @map("_id")
-//     name        String
-//     phone       String       @unique
-//     email       String       @unique
-//     password    String
-//     position    String
-//     role        String
-//     company     Company      @relation(fields: [companyId], references: [id])
-//     companyId   String
-//     address     String?
-//     attendances Attendance[]
-//     reports     Report[]
-//     tasks       Task[]
-//     createdAt   DateTime     @default(now())
-//     updatedAt   DateTime     @updatedAt
-//   }
-  
-//   model Attendance {
-//     id         String   @id @default(cuid()) @map("_id")
-//     date       DateTime
-//     workStart  DateTime
-//     workEnd    DateTime
-//     breakStart DateTime
-//     breakEnd   DateTime
-//     employee   Employee @relation(fields: [employeeId], references: [id])
-//     employeeId String
-//     createdAt  DateTime @default(now())
-//     updatedAt  DateTime @updatedAt
-//   }
-  
-//   model Report {
-//     id         String   @id @default(cuid()) @map("_id")
-//     date       DateTime
-//     tasks      Task[]
-//     notes      String?
-//     employee   Employee @relation(fields: [employeeId], references: [id])
-//     employeeId String
-//     createdAt  DateTime @default(now())
-//     updatedAt  DateTime @updatedAt
-//   }
-  
-//   model Task {
-//     id          String   @id @default(cuid()) @map("_id")
-//     title       String
-//     description String?
-//     deadline    DateTime
-//     isWorking   Boolean  @default(false)
-//     employee    Employee @relation(fields: [employeeId], references: [id])
-//     employeeId  String
-//     report      Report?  @relation(fields: [reportId], references: [id])
-//     reportId    String?
-//     createdAt   DateTime @default(now())
-//     updatedAt   DateTime @updatedAt
-//   }
-  
-//   model Company {
-//     id        String     @id @default(cuid()) @map("_id")
-//     name      String
-//     address   String
-//     employees Employee[]
-//     createdAt DateTime   @default(now())
-//     updatedAt DateTime   @updatedAt
-//   }
 
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ name: 'id' })
     public id: string;
 
     @Column({ name: 'name', type: 'varchar', length: Employee.NAME_LENGTH })
@@ -94,7 +42,7 @@ export class Employee {
     public position: string;
 
     @Column({ name: 'role', type: 'varchar' })
-    public role: Role;
+    public role: string;
 
     @Column({ name: 'companyId', type: 'varchar' })
     public companyId: string;

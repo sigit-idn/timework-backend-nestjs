@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '../../../enums/role';
   
 /**
  * @class EmployeeData
@@ -25,7 +24,7 @@ export class EmployeeData {
     public position: string;
 
     @ApiProperty({ description: 'role', example: 'admin' })
-    public role: Role;
+    public role: string;
 
     @ApiProperty({ description: 'companyID', example: '1' })
     public companyId: string;
