@@ -2,6 +2,7 @@ import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException,
 import { ApiBearerAuth, ApiResponse, ApiTags  } from '@nestjs/swagger';
 import { FindCondition                        } from 'typeorm';
 import { Config, LoggerService, EmployeeGuard } from '../../common';
+import { AdminGuard                           } from '../../common/security/admin.guard';
 import { Service                              } from '../../tokens';
 import { EmployeePipe                         } from '../flow';
 import { Employee, EmployeeData               } from '../model';
@@ -13,6 +14,7 @@ import { EmployeeService                      } from '../service';
  */
 @Controller('employees')
 @ApiTags('employee')
+@UseGuards(EmployeeGuard)
 @ApiBearerAuth()
 export class EmployeeController {
 
@@ -48,7 +50,6 @@ export class EmployeeController {
      * @returns {Promise<EmployeeData>}
      */
     @Get(':id')
-    @UseGuards(EmployeeGuard)
     @ApiResponse({
         status     : HttpStatus.OK,
         description: 'Find one employee by id',
@@ -72,7 +73,7 @@ export class EmployeeController {
      * @returns {Promise<EmployeeData>}
      */
     @Post()
-    @UseGuards(EmployeeGuard)
+    @UseGuards(AdminGuard)
     @ApiResponse({ status: HttpStatus.CREATED, type: EmployeeData })
     public async create(@Body(EmployeePipe) input: Employee): Promise<EmployeeData> {
 
@@ -93,7 +94,7 @@ export class EmployeeController {
      * @returns {Promise<EmployeeData>}
      */
     @Put(':id')
-    @UseGuards(EmployeeGuard)
+    @UseGuards(AdminGuard)
     @ApiResponse({ status: HttpStatus.OK, type: EmployeeData })
     public async update(
         @Param() { id }: Employee,
