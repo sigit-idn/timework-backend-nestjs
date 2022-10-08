@@ -5,6 +5,7 @@ import { AuthModule       } from './auth/auth.module';
 import { CommonModule     } from './common';
 import { EmployeeModule   } from './employee/employee.module';
 import { ReportModule     } from './report/report.module';
+import { TaskModule       } from './task/task.module';
 
 @Module({
     imports: [
@@ -13,6 +14,7 @@ import { ReportModule     } from './report/report.module';
         EmployeeModule,
         AttendanceModule,
         ReportModule,
+        TaskModule,
         AuthModule
     ]
 })

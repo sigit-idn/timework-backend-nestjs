@@ -24,7 +24,7 @@ export class Attendance {
     @PrimaryGeneratedColumn({ name: 'id' })
     public id: string;
 
-    @Column({ name: 'employeeId' })
+    @Column({ name: 'employee_id' })
     public employeeId: string;
 
     @Column({ name: 'date' })

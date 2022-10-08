@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ReportData                             } from '.';
+import { Task } from '../../task/model';
 
 /**
  * @class Report
@@ -10,70 +11,7 @@ export class Report {
     constructor(...data: Partial<Report>[]) {
         Object.assign(this, ...data);
     }
-    // model Employee {
-//     id          String       @id @default(cuid()) @map("_id")
-//     name        String
-//     phone       String       @unique
-//     email       String       @unique
-//     password    String
-//     position    String
-//     role        String
-//     company     Company      @relation(fields: [companyId], references: [id])
-//     companyId   String
-//     address     String?
-//     reports Report[]
-//     reports     Report[]
-//     tasks       Task[]
-//     createdAt   DateTime     @default(now())
-//     updatedAt   DateTime     @updatedAt
-//   }
-  
-//   model Attendace {
-//     id         String   @id @default(cuid()) @map("_id")
-//     date       DateTime
-//     workStart  DateTime
-//     workEnd    DateTime
-//     breakStart DateTime
-//     breakEnd   DateTime
-//     report   Report @relation(fields: [reportId], references: [id])
-//     reportId String
-//     createdAt  DateTime @default(now())
-//     updatedAt  DateTime @updatedAt
-//   }
-  
-//   model Report {
-//     id         String   @id @default(cuid()) @map("_id")
-//     date       DateTime
-//     tasks      Task[]
-//     notes      String?
-//     report   Report @relation(fields: [reportId], references: [id])
-//     reportId String
-//     createdAt  DateTime @default(now())
-//     updatedAt  DateTime @updatedAt
-//   }
-  
-//   model Task {
-//     id          String   @id @default(cuid()) @map("_id")
-//     title       String
-//     description String?
-//     deadline    DateTime
-//     isWorking   Boolean  @default(false)
-//     report    Report @relation(fields: [reportId], references: [id])
-//     reportId  String
-//     report      Report?  @relation(fields: [reportId], references: [id])
-//     reportId    String?
-//     createdAt   DateTime @default(now())
-//     updatedAt   DateTime @updatedAt
-//   }
-  
-//   model Company {
-//     id        String     @id @default(cuid()) @map("_id")
-//     name      String
-//     address   String
-//     reports Report[]
-//     createdAt DateTime   @default(now())
-//     updatedAt DateTime   @updatedAt
-//   }
+
     /**
      * @method set
      * @description Set report data
@@ -102,8 +40,8 @@ export class Report {
     @Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     public updatedAt: Date;
 
-    // @OneToMany(() => Task, task => task.report)
-    
+    @OneToMany(() => Task, task => task.reportId)
+    public tasks: Task[];
     
     /**
      * @method buildData
