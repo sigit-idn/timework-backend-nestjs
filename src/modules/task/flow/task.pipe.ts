@@ -12,7 +12,7 @@ export class TaskPipe extends JoiValidationPipe {
     public buildSchema(): Joi.Schema {
 
         return Joi.object<TaskInput>({
-            employeeId : Joi.string().required(),
+            employeeId : Joi.string().optional(),
             reportId   : Joi.string().required(),
             title      : Joi.string().required(),
             description: Joi.string().required(),

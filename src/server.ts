@@ -52,7 +52,13 @@ function createSwagger(app: INestApplication) {
  */
 async function bootstrap(): Promise<void> {
 
-    const app = await NestFactory.create(ApplicationModule); // create the NestJS application
+    const app = await NestFactory.create(ApplicationModule, { 
+        cors: {
+            origin: true,
+            credentials: true,
+            exposedHeaders: ['Set-Cookie']
+        }
+    });
 
     app.setGlobalPrefix(process.env.API_PREFIX || API_DEFAULT_PREFIX);
 
@@ -63,7 +69,7 @@ async function bootstrap(): Promise<void> {
     app.use(json());
     app.use(helmet());
 
-    const logInterceptor = app.select(CommonModule).get(LogInterceptor); // log interceptor is used to log the request and response
+    const logInterceptor = app.select(CommonModule).get(LogInterceptor);
     app.useGlobalInterceptors(logInterceptor);
 
     await app.listen(process.env.API_PORT || API_DEFAULT_PORT);

@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put, Req } from '@nestjs/common';
 import { Config, LoggerService               } from '../../common';
 import { EmployeeGuard                       } from '../../common/security';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -20,8 +20,8 @@ export class AttendanceController {
 
     public constructor(
         @Inject(Service.CONFIG)
-        private readonly config         : Config,
-        private readonly logger         : LoggerService,
+        private readonly config           : Config,
+        private readonly logger           : LoggerService,
         private readonly attendanceService: AttendanceService
     ) { }
 
@@ -100,6 +100,74 @@ export class AttendanceController {
     : Promise<AttendanceData> {
         const attendance = await this.attendanceService.update({id, ...input} as Attendance);
         this.logger.info(`Updated attendance with ID ${attendance.id}`);
+
+        return attendance.buildData();
+    }
+
+    /**
+     * @method workStart
+     * @description Start work
+     * @param {Request} req
+     * @returns {Promise<AttendanceData>}
+     */
+    @Post('work_start')
+    @ApiResponse({ status: HttpStatus.OK, type: AttendanceData })
+    public async workStart(@Req() req: any): Promise<AttendanceData> {
+        const employeeId = req.params.employeeId;
+        
+        const attendance = await this.attendanceService.workStart(employeeId);
+        this.logger.info(`Started work with attendance ID ${attendance.id}`);
+
+        return attendance.buildData();
+    }
+
+    /**
+     * @method breakStart
+     * @description Start break
+     * @param {Request} req
+     * @returns {Promise<AttendanceData>}
+     */
+    @Post('break_start')
+    @ApiResponse({ status: HttpStatus.OK, type: AttendanceData })
+    public async breakStart(@Req() req: any): Promise<AttendanceData> {
+        const employeeId = req.params.employeeId;
+        
+        const attendance = await this.attendanceService.breakStart(employeeId);
+        this.logger.info(`Started break with attendance ID ${attendance.id}`);
+
+        return attendance.buildData();
+    }
+
+    /**
+     * @method breakEnd
+     * @description End break
+     * @param {Request} req
+     * @returns {Promise<AttendanceData>}
+     */
+    @Post('break_end')
+    @ApiResponse({ status: HttpStatus.OK, type: AttendanceData })
+    public async breakEnd(@Req() req: any): Promise<AttendanceData> {
+        const employeeId = req.params.employeeId;
+        
+        const attendance = await this.attendanceService.breakEnd(employeeId);
+        this.logger.info(`Ended break with attendance ID ${attendance.id}`);
+
+        return attendance.buildData();
+    }
+
+    /**
+     * @method workEnd
+     * @description End work
+     * @param {Request} req
+     * @returns {Promise<AttendanceData>}
+     */
+    @Post('work_end')
+    @ApiResponse({ status: HttpStatus.OK, type: AttendanceData })
+    public async workEnd(@Req() req: any): Promise<AttendanceData> {
+        const employeeId = req.params.employeeId;
+        
+        const attendance = await this.attendanceService.workEnd(employeeId);
+        this.logger.info(`Ended work with attendance ID ${attendance.id}`);
 
         return attendance.buildData();
     }

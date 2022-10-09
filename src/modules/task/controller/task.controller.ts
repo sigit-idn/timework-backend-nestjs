@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FindCondition                       } from 'typeorm';
 import { Config, LoggerService               } from '../../common';
@@ -29,6 +29,7 @@ export class TaskController {
      * @method find
      * @description Find all tasks
      * @param {FindCondition<Task>} where
+     * @param {Request} req
      * @returns {Promise<TaskData[]>}
      */
     @Get()
@@ -37,8 +38,12 @@ export class TaskController {
         description: 'Find all tasks',
         type       : TaskData
     })
-    public async find(@Query() where?: FindCondition<Task>): Promise<TaskData[]> {
-        const tasks = await this.taskService.find(where);
+    public async find(
+        @Query() where?: FindCondition<Task>,
+        @Req() req?: Request|any
+    ): Promise<TaskData[]> {
+        const { employeeId } = req.params;
+        const tasks = await this.taskService.find({employeeId, ...where});
 
         return tasks.map(task => task.buildData());
     }
@@ -70,11 +75,16 @@ export class TaskController {
      * @method create
      * @description Create a new task
      * @param {Task} input
+     * @param {Request} req
      * @returns {Promise<TaskData>}
      */
     @Post()
     @ApiResponse({ status: HttpStatus.CREATED, type: TaskData })
-    public async create(@Body(TaskPipe) input: Task): Promise<TaskData> {
+    public async create(
+        @Body(TaskPipe) input: Task,
+        @Req() req?: Request|any
+    ): Promise<TaskData> {
+        input.employeeId = req.params;
 
         if (this.config.EMPLOYEES_ALLOWED === 'no') {
             throw new PreconditionFailedException(`Not allowed to onboard tasks`);

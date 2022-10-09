@@ -28,18 +28,18 @@ export class Attendance {
     public employeeId: string;
 
     @Column({ name: 'date' })
-    public date: Date;
+    public date: string;
 
     @Column({ name: 'work_start' })
     public workStart: Date;
 
-    @Column({ name: 'work_end' })
+    @Column({ name: 'work_end', nullable: true })
     public workEnd: Date;
 
-    @Column({ name: 'break_start' })
+    @Column({ name: 'break_start', nullable: true })
     public breakStart: Date;
 
-    @Column({ name: 'break_end' })
+    @Column({ name: 'break_end', nullable: true })
     public breakEnd: Date;
 
     @Column({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

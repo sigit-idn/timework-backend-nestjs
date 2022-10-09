@@ -9,17 +9,17 @@ export class AttendanceInput {
     public employeeId: string;
 
     @ApiProperty()
-    public date: Date;
+    public date: string;
 
     @ApiProperty()
-    public workStart: Date;
+    public workStart: Date|null;
 
     @ApiProperty()
-    public workEnd: Date;
+    public workEnd: Date|null;
 
     @ApiProperty()
-    public breakStart: Date;
+    public breakStart: Date|null;
 
     @ApiProperty()
-    public breakEnd: Date;
+    public breakEnd: Date|null;
 }

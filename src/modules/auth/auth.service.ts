@@ -40,11 +40,10 @@ export class AuthService {
 	 * @param {Employee} user
 	 * @returns {Promise<{access_token: string}>}
 	 */
-	public async generateToken({email, id, role}: Employee): Promise<{access_token: string}> {
+	public async generateToken({email, id, role}: Employee): Promise<string> {
 		const payload = { email, id, role };
-		return {
-			access_token: this.jwtService.sign(payload),
-		};
+		
+		return this.jwtService.sign(payload);
 	}
 
 	/**
@@ -53,11 +52,11 @@ export class AuthService {
 	 * @param {Partial<Employee>} { email, password }
 	 * @returns {Promise<{access_token: string}>}
 	 */
-	public async login({ email, password }: Partial<Employee>): Promise<{access_token: string}|null> {
+	public async login({ email, password }: Partial<Employee>): Promise<[Employee, string]|null> {
 		const user = await this.validateUser(email!, password!);
 
 		if (!user) return null;
 
-		return this.generateToken(user);
+		return [user, await this.generateToken(user)];
 	}
 }

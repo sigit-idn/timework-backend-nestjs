@@ -12,19 +12,19 @@ export class AttendanceData {
     public employeeId: string;
 
     @ApiProperty({ description: 'date', example: '2022-01-01' })
-    public date: Date;
+    public date: string;
 
     @ApiProperty({ description: 'workStart', example: '2022-01-01 08:00:00' })
-    public workStart: Date;
+    public workStart: Date|null;
 
     @ApiProperty({ description: 'workEnd', example: '2022-01-01 17:00:00' })
-    public workEnd: Date;
+    public workEnd: Date|null;
 
     @ApiProperty({ description: 'breakStart', example: '2022-01-01 12:00:00' })
-    public breakStart: Date;
+    public breakStart: Date|null;
 
     @ApiProperty({ description: 'breakEnd', example: '2022-01-01 13:00:00' })
-    public breakEnd: Date;
+    public breakEnd: Date|null;
 
     @ApiProperty({ description: 'createdAt', example: '2022-01-01 08:00:00' })
     public createdAt: Date;

@@ -10,6 +10,8 @@ export class SuperadminGuard implements CanActivate {
         const payload = extractTokenPayload(context.switchToHttp().getRequest()); 
 
         if (!payload) return false;
+        
+        context.switchToHttp().getRequest().params.employeeId = payload.id;
 
         return (payload.role === Role.SUPERADMIN);
     }

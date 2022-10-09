@@ -11,6 +11,8 @@ export class AdminGuard implements CanActivate {
 
         if (!payload) return false;
 
+        context.switchToHttp().getRequest().params.employeeId = payload.id;
+
         return [Role.ADMIN, Role.SUPERADMIN].includes(payload.role); // admin, superadmin can access
     }
 

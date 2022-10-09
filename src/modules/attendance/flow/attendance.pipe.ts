@@ -13,11 +13,11 @@ export class AttendancePipe extends JoiValidationPipe {
 
         return Joi.object<AttendanceInput>({
             employeeId: Joi.string().required(),
-            date      : Joi.date().required(),
-            workStart : Joi.date().required(),
-            workEnd   : Joi.date().required(),
-            breakStart: Joi.date().required(),
-            breakEnd  : Joi.date().required(),
+            date      : Joi.string().required().regex(/^\d{4}-\d{2}-\d{2}$/),
+            workStart : Joi.date().optional(),
+            workEnd   : Joi.date().optional(),
+            breakStart: Joi.date().optional(),
+            breakEnd  : Joi.date().optional(),
         });
 
     }
