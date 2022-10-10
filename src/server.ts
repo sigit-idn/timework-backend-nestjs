@@ -10,7 +10,7 @@ import { CommonModule, LogInterceptor   } from './modules/common';     // used t
  * These are API defaults that can be changed using environment variables,
  * it is not required to change them (see the `.env.example` file)
  */
-const API_DEFAULT_PORT   = 3000;
+const API_DEFAULT_PORT   = 8080;
 const API_DEFAULT_PREFIX = '/api/v1/';
 
 /**
