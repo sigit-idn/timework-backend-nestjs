@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put, Req } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put, Req, Delete } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FindCondition                       } from 'typeorm';
 import { Config, LoggerService               } from '../../common';
@@ -42,8 +42,9 @@ export class TaskController {
         @Query() where?: FindCondition<Task>,
         @Req() req?: Request|any
     ): Promise<TaskData[]> {
-        const { employeeId } = req.params;
-        const tasks = await this.taskService.find({employeeId, ...where});
+        const { employeeId } = req.query;
+        const { employeeId: selfEmployeeId } = req.params;
+        const tasks = await this.taskService.find({employeeId: employeeId || selfEmployeeId, ...where});
 
         return tasks.map(task => task.buildData());
     }
@@ -84,7 +85,7 @@ export class TaskController {
         @Body(TaskPipe) input: Task,
         @Req() req?: Request|any
     ): Promise<TaskData> {
-        input.employeeId = req.params;
+        input.employeeId = input.employeeId || req.params.employeeId;
 
         if (this.config.EMPLOYEES_ALLOWED === 'no') {
             throw new PreconditionFailedException(`Not allowed to onboard tasks`);
@@ -114,4 +115,54 @@ export class TaskController {
         return task.buildData();
     }
 
+    /**
+     * @method delete
+     * @description Delete an existing task
+     * @param {Task} input
+     * @returns {Promise<TaskData>}
+     */
+    @Delete(':id')
+    @ApiResponse({ status: HttpStatus.OK, type: TaskData })
+    public async delete(@Param() { id }: Task): Promise<TaskData> {
+        const task = await this.taskService.delete({id});
+        this.logger.info(`Deleted task with ID ${id}`);
+
+        return task.buildData();
+    }
+
+    /**
+     * @method startTask
+     * @description Start a task
+     * @param {string} id
+     * @returns {Promise<TaskData>}
+     */
+    @Post(':id/start')
+    @ApiResponse({ status: HttpStatus.OK, type: TaskData })
+    public async startTask(
+        @Param() { id }: Task,
+        @Req() req?: Request|any
+    ): Promise<TaskData> {
+        const task = await this.taskService.startTask(id, req.params.employeeId);
+        this.logger.info(`Started task with ID ${id}`);
+
+        return task.buildData();
+    }
+
+    /**
+     * @method finishTask
+     * @description Finish a task
+     * @param {string} id
+     * @returns {Promise<TaskData>}
+     */
+    @Post(':id/finish')
+    @ApiResponse({ status: HttpStatus.OK, type: TaskData })
+    public async finishTask(
+        @Param() { id }: Task,
+        @Req() req?: Request|any
+    ): Promise<TaskData> {
+        const task = await this.taskService.finishTask(id);
+        this.logger.info(`Finished task with ID ${id}`);
+
+        return task.buildData();
+    }
 }

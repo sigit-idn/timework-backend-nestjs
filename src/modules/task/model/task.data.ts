@@ -12,7 +12,7 @@ export class TaskData {
     public employeeId: string;
 
     @ApiProperty({ description: 'reportId', example: 1 })
-    public reportId: string;
+    public reportId: string|undefined;
 
     @ApiProperty({ description: 'title', example: 'title' })
     public title: string;

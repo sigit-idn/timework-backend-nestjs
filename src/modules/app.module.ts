@@ -11,7 +11,9 @@ import { TaskModule       } from './task/task.module';
 @Module({
     imports: [
         CommonModule,
-        TypeOrmModule.forRoot(),
+        TypeOrmModule.forRoot({
+            autoLoadEntities: true,
+        }),
         EmployeeModule,
         AttendanceModule,
         ReportModule,

@@ -18,7 +18,7 @@ export class EmployeeData {
     public email: string;
 
     @ApiProperty({ description: 'password', example: '123456' })
-    public password: string;
+    public password?: string;
 
     @ApiProperty({ description: 'position', example: 'product_manager' })
     public position: string;

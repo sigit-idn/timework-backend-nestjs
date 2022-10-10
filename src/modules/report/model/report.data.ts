@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { TaskData } from '../../task/model';
   
 /**
  * @class ReportData
@@ -12,10 +13,13 @@ export class ReportData {
     public employeeId: string;
 
     @ApiProperty({ description: 'date', example: '2022-01-01' })
-    public date: Date;
+    public date: string;
 
     @ApiProperty({ description: 'notes', example: 'notes' })
-    public notes: string;
+    public notes?: string;
+
+    @ApiProperty({ description: 'tasks', example: [] })
+    public tasks?: TaskData[];
 
     @ApiProperty({ description: 'createdAt', example: '2022-01-01 08:00:00' })
     public createdAt: Date;

@@ -9,8 +9,8 @@ export class ReportInput {
     public employeeId: string;
 
     @ApiProperty()
-    public date: Date;
+    public date: string;
 
     @ApiProperty()
-    public notes: string;
+    public notes?: string;
 }

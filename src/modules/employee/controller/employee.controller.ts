@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FindCondition                       } from 'typeorm';
 import { Config, LoggerService               } from '../../common';
@@ -29,6 +29,7 @@ export class EmployeeController {
      * @method find
      * @description Find all employees
      * @param {FindCondition<Employee>} where
+     * @param {Request} req
      * @returns {Promise<EmployeeData[]>}
      */
     @Get()
@@ -37,10 +38,14 @@ export class EmployeeController {
         description: 'Find all employees',
         type       : EmployeeData
     })
-    public async find(@Query() where?: FindCondition<Employee>): Promise<EmployeeData[]> {
-        const employees = await this.employeeService.find(where);
+    public async find(
+        @Query() where?: FindCondition<Employee>,
+        @Req() req?: Request|any
+    ): Promise<Partial<Employee>[]> {
+        const { employeeId } = req.params;
+        const employees = await this.employeeService.find(where, employeeId);
 
-        return employees.map(employee => employee.buildData());
+        return employees.map(employee => employee.buildRelatedData());
     }
 
     /**

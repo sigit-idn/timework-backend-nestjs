@@ -1,11 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { AttendanceData                           } from '.';
+import { Employee } from '../../employee/model';
 
 /**
  * @class Attendance
  * @description Attendance entity means the attendance table in the database
  */
-@Entity({ name: 'attendance' })
+@Entity({ name: 'attendances' })
 export class Attendance {
     constructor(...data: Partial<Attendance>[]) {
         Object.assign(this, ...data);
@@ -47,6 +48,9 @@ export class Attendance {
 
     @Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     public updatedAt: Date;
+
+    @ManyToOne(_type => Employee, employee => employee.attendances)
+    public employee: Employee;
 
     /**
      * @method buildData

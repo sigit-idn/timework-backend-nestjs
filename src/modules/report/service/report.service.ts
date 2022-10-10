@@ -1,7 +1,8 @@
-import { Injectable, PreconditionFailedException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, PreconditionFailedException } from '@nestjs/common';
 import { InjectRepository                        } from '@nestjs/typeorm';
-import { FindCondition, Repository               } from 'typeorm';
-import { Report                              } from '../model';
+import { FindCondition, In, Like, Repository         } from 'typeorm';
+import { TaskService } from '../../task/service';
+import { Report, ReportInput                     } from '../model';
 
 /**
  * @class ReportService
@@ -12,7 +13,10 @@ export class ReportService {
 
     public constructor(
         @InjectRepository(Report)
-        private readonly reportRepository: Repository<Report>
+        private readonly reportRepository: Repository<Report>,
+
+        @Inject(forwardRef(() => TaskService))
+        private readonly taskService: TaskService,
     ) { }
 
     /**
@@ -22,7 +26,29 @@ export class ReportService {
      * @returns {Promise<Report[]>}
      */
     public async find(where?: FindCondition<Report>): Promise<Report[]> {
-        return this.reportRepository.find({ where });
+        if (where && (where as any).month) {
+            const month = (where as any).month;
+            delete (where as any).month;
+
+            (where as any).date = Like(`%${month}%`);
+        }
+        
+        const reports = await this.reportRepository.find({ 
+            relations: ['tasks'],
+            where: {
+                ...where,
+            },
+         });
+
+        const tasks = await this.taskService.find({
+            reportId: In(reports.map(({ id }) => id)),
+        });
+
+        reports.forEach(report => {
+            report.tasks = tasks.filter(({ reportId }) => reportId == report.id);
+        })
+
+        return reports;
     }
 
     /**
@@ -47,7 +73,7 @@ export class ReportService {
      * @param {Report} input
      * @returns {Promise<Report>}
      */
-    public async create(input: Report): Promise<Report> {
+    public async create(input: ReportInput): Promise<Report> {
         const report = new Report(input);
         
         return this.reportRepository.save(report);

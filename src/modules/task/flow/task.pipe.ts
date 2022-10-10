@@ -13,7 +13,7 @@ export class TaskPipe extends JoiValidationPipe {
 
         return Joi.object<TaskInput>({
             employeeId : Joi.string().optional(),
-            reportId   : Joi.string().required(),
+            reportId   : Joi.optional(),
             title      : Joi.string().required(),
             description: Joi.string().required(),
             deadline   : Joi.date().required(),

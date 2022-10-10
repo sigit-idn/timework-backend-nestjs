@@ -13,8 +13,8 @@ export class ReportPipe extends JoiValidationPipe {
 
         return Joi.object<ReportInput>({
             employeeId: Joi.string().required(),
-            date      : Joi.date().required(),
-            notes     : Joi.string().required(),
+            date      : Joi.string().required().regex(/^\d{4}-\d{2}-\d{2}$/),
+            notes     : Joi.string().optional(),
         });
 
     }

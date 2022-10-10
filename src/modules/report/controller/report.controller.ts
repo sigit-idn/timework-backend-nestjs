@@ -1,12 +1,12 @@
-import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags        } from '@nestjs/swagger';
-import { FindCondition                              } from 'typeorm';
-import { Config, LoggerService                      } from '../../common';
-import { EmployeeGuard } from '../../common/security';
-import { Service                                    } from '../../tokens';
-import { ReportPipe                                 } from '../flow';
-import { Report, ReportData                         } from '../model';
-import { ReportService                              } from '../service';
+import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put, Req } from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FindCondition                       } from 'typeorm';
+import { Config, LoggerService               } from '../../common';
+import { EmployeeGuard                       } from '../../common/security';
+import { Service                             } from '../../tokens';
+import { ReportPipe                          } from '../flow';
+import { Report, ReportData                  } from '../model';
+import { ReportService                       } from '../service';
 
 /**
  * @class ReportController
@@ -37,10 +37,15 @@ export class ReportController {
         description: 'Find all reports',
         type       : ReportData
     })
-    public async find(@Query() where?: FindCondition<Report>): Promise<ReportData[]> {
+    public async find(
+        @Query() where?: FindCondition<Report>|any,
+        @Req() req?: Request | any
+    ): Promise<ReportData[]> {
+        where.employeeId = req.params.employeeId;
+        
         const reports = await this.reportService.find(where);
 
-        return reports.map(report => report.buildData());
+        return reports.map(report => report.buildDataWithRelations());
     }
 
     /**
@@ -57,7 +62,6 @@ export class ReportController {
     })
     async findOne(@Param() { id }: Report): Promise<ReportData> {
         const report = await this.reportService.findOne({id});
-        
 
         if (!report) {
             throw new PreconditionFailedException('Report not found');

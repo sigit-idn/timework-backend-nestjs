@@ -2,12 +2,13 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { EmployeeData                                      } from '.';
 import { Attendance                                        } from '../../attendance/model';
 import { Report                                            } from '../../report/model';
+import { Task } from '../../task/model';
 
 /**
  * @class Employee
  * @description Employee entity means the employee table in the database
  */
-@Entity({ name: 'employee' })
+@Entity({ name: 'employees' })
 export class Employee {
     constructor(...data: Partial<Employee>[]) {
         Object.assign(this, ...data);
@@ -58,11 +59,14 @@ export class Employee {
     @Column({ name: 'updatedAt', type: 'varchar', default: () => 'now()' })
     public updatedAt: string;
 
-    @OneToMany(_type => Attendance, attendance => attendance.employeeId)
+    @OneToMany(_type => Attendance, attendance => attendance.employee)
     public attendances: Attendance[];
 
-    @OneToMany(_type => Report, report => report.employeeId)
+    @OneToMany(_type => Report, report => report.employee)
     public reports: Report[];
+
+    @OneToMany(_type => Task, task => task.employee)
+    public tasks: Task[];
 
     public buildData(): EmployeeData {
 
@@ -71,13 +75,21 @@ export class Employee {
             name     : this.name,
             phone    : this.phone,
             email    : this.email,
-            password : this.password,
             position : this.position,
             role     : this.role,
             companyId: this.companyId,
             address  : this.address,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt
+        };
+    }
+
+    public buildRelatedData(): Partial<Employee> {
+        return {
+            ...this.buildData(),
+            attendances: this.attendances,
+            reports    : this.reports,
+            tasks      : this.tasks
         };
     }
 

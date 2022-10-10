@@ -9,7 +9,7 @@ export class TaskInput {
     public employeeId: string;
 
     @ApiProperty()
-    public reportId: string;
+    public reportId: string|undefined;
 
     @ApiProperty()
     public title: string;

@@ -1,6 +1,7 @@
 import { Module             } from '@nestjs/common';
 import { TypeOrmModule      } from '@nestjs/typeorm';
 import { CommonModule       } from '../common';
+import { TaskModule         } from '../task/task.module';
 import { EmployeeController } from './controller';
 import { Employee           } from './model';
 import { EmployeeService    } from './service';
@@ -10,7 +11,8 @@ import { EmployeeService    } from './service';
         CommonModule,
         TypeOrmModule.forFeature([
             Employee
-        ])
+        ]),
+        TaskModule
     ],
     providers: [
         EmployeeService

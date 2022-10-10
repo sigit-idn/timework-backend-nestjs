@@ -1,11 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { TaskData                             } from '.';
+import { Employee } from '../../employee/model';
+import { Report } from '../../report/model';
 
 /**
  * @class Task
  * @description Task entity means the task table in the database
  */
-@Entity({ name: 'task' })
+@Entity({ name: 'tasks' })
 export class Task {
     constructor(...data: Partial<Task>[]) {
         Object.assign(this, ...data);
@@ -26,7 +28,7 @@ export class Task {
     @Column({ name: 'employee_id', type: 'varchar' })
     public employeeId: string;
 
-    @Column({ name: 'report_id', type: 'varchar' })
+    @Column({ name: 'report_id', type: 'varchar', nullable: true })
     public reportId: string;
 
     @Column({ name: 'title', type: 'varchar' })
@@ -52,6 +54,12 @@ export class Task {
 
     @Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     public updatedAt: Date;
+
+    @ManyToOne(_type => Employee, employee => employee.tasks)
+    public employee: Employee;
+
+    @ManyToOne(_type => Report, report => report.tasks)
+    public report: Report;
 
     /**
      * @method buildData

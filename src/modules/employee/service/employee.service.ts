@@ -1,8 +1,9 @@
-import { Injectable, PreconditionFailedException } from '@nestjs/common';
-import { InjectRepository                        } from '@nestjs/typeorm';
-import { FindCondition, Repository               } from 'typeorm';
-import { Employee                                } from '../model';
-import { hash, genSalt                           } from 'bcrypt';
+import { Inject, Injectable, PreconditionFailedException } from '@nestjs/common';
+import { InjectRepository                                } from '@nestjs/typeorm';
+import { FindCondition, Repository                       } from 'typeorm';
+import { Employee                                        } from '../model';
+import { hash, genSalt                                   } from 'bcrypt';
+import { TaskService                                     } from '../../task/service';
 
 /**
  * @class EmployeeService
@@ -13,17 +14,36 @@ export class EmployeeService {
 
     public constructor(
         @InjectRepository(Employee)
-        private readonly employeeRepository: Repository<Employee>
+        private readonly employeeRepository: Repository<Employee>,
+
+        @Inject(TaskService)
+        private readonly taskService: TaskService,
     ) { }
 
     /**
      * @method find
      * @description Find all employees
      * @param {FindCondition<Employee>} where
+     * @param {string} employeeId
      * @returns {Promise<Employee[]>}
      */
-    public async find(where?: FindCondition<Employee>): Promise<Employee[]> {
-        return this.employeeRepository.find({ where });
+    public async find(where?: FindCondition<Employee>, employeeId?: string): Promise<Employee[]> {
+        const companyId = await (await this.findOne({id: employeeId})).companyId
+
+        where = {
+            ...where,
+            companyId
+        }
+
+        const employees = await this.employeeRepository.find({ where, relations: ['tasks'] });
+
+        const tasks = await this.taskService.find({ employeeId: employeeId });
+        
+        employees.forEach(employee => {
+            employee.tasks = tasks.filter(({employeeId}) => employeeId == employee.id)
+        })
+
+        return employees;
     }
 
     /**

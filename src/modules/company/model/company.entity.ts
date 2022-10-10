@@ -6,7 +6,7 @@ import { Employee                                          } from '../../employe
  * @class Company
  * @description Company entity means the company table in the database
  */
-@Entity({ name: 'company' })
+@Entity({ name: 'companies' })
 export class Company {
     constructor(...data: Partial<Company>[]) {
         Object.assign(this, ...data);

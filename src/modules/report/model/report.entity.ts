@@ -1,12 +1,13 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ReportData                             } from '.';
+import { Employee } from '../../employee/model';
 import { Task } from '../../task/model';
 
 /**
  * @class Report
  * @description Report entity means the report table in the database
  */
-@Entity({ name: 'report' })
+@Entity({ name: 'reports' })
 export class Report {
     constructor(...data: Partial<Report>[]) {
         Object.assign(this, ...data);
@@ -28,10 +29,10 @@ export class Report {
     @Column({ name: 'employee_id' })
     public employeeId: string;
 
-    @Column({ name: 'date' })
-    public date: Date;
+    @Column({ name: 'date', type: 'varchar' })
+    public date: string;
 
-    @Column({ name: 'notes' })
+    @Column({ name: 'notes', type: 'varchar', nullable: true })
     public notes: string;
 
     @Column({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
@@ -40,8 +41,11 @@ export class Report {
     @Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     public updatedAt: Date;
 
-    @OneToMany(() => Task, task => task.reportId)
+    @OneToMany(() => Task, task => task.report)
     public tasks: Task[];
+
+    @ManyToOne(_type => Employee, employee => employee.reports)
+    public employee: Employee;
     
     /**
      * @method buildData
@@ -56,6 +60,18 @@ export class Report {
             notes     : this.notes,
             createdAt : this.createdAt,
             updatedAt : this.updatedAt,
+        };
+    }
+
+    /**
+     * @method buildDataWithRelations
+     * @description Build report data with relations
+     * @returns {ReportData}
+     */
+    public buildDataWithRelations(): ReportData {
+        return {
+            ...this.buildData(),
+            tasks: this.tasks.map(task => task.buildData()),
         };
     }
 }
