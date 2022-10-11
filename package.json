@@ -11,6 +11,7 @@
   "scripts": {
     "clean": "rimraf ./dist",
     "start": "node dist/server.js",
+    "start:prod": "node dist/server.js",
     "dev": "env-cmd -f .env nodemon",
     "build": "npm run clean && tsc",
     "test": "env-cmd -f .env jest --config=jest.json",
