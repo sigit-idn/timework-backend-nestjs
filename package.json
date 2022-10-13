@@ -1,7 +1,7 @@
 {
-  "name": "nest-template",
+  "name": "time-work",
   "version": "0.1.0",
-  "description": "NestJS API project template crafted for Docker environments",
+  "description": "NManage employee attendance and tasks",
   "author": "Sigit Tri Nugroho",
   "license": "MIT",
   "private": true,

@@ -1,8 +1,8 @@
 import { forwardRef, Inject, Injectable, PreconditionFailedException } from '@nestjs/common';
-import { InjectRepository                                } from '@nestjs/typeorm';
-import { FindCondition, Repository                       } from 'typeorm';
-import { ReportService                                   } from '../../report/service';
-import { Task                                            } from '../model';
+import { InjectRepository          } from '@nestjs/typeorm';
+import { FindCondition, Repository } from 'typeorm';
+import { ReportService             } from '../../report/service';
+import { Task                      } from '../model';
 
 /**
  * @class TaskService
@@ -25,7 +25,7 @@ export class TaskService {
      * @returns {Promise<Task[]>}
      */
     public async find(where?: FindCondition<Task>): Promise<Task[]> {
-        return this.taskRepository.find({ 
+        return this.taskRepository.find({
             where,
             order: {
                 deadline: 'ASC'
@@ -69,8 +69,8 @@ export class TaskService {
      * @param {Task} input
      * @returns {Promise<Task>}
      */
-    public async update({id, ...input}: Task): Promise<Task> {
-        const task = await this.findOne({id});
+    public async update({ id, ...input }: Task): Promise<Task> {
+        const task = await this.findOne({ id });
 
         Object.assign(task, input);
 
@@ -83,8 +83,8 @@ export class TaskService {
      * @param {Task} input
      * @returns {Promise<Task>}
      */
-    public async delete({id}: Partial<Task>): Promise<Task> {
-        const task = await this.findOne({id});
+    public async delete({ id }: Partial<Task>): Promise<Task> {
+        const task = await this.findOne({ id });
 
         return this.taskRepository.remove(task);
     }
@@ -100,9 +100,9 @@ export class TaskService {
         taskId: string,
         employeeId: string
     ): Promise<Task> {
-        await this.taskRepository.update({employeeId}, {isWorking: false});
-        const task = await this.findOne({id: taskId});
-        
+        await this.taskRepository.update({ employeeId }, { isWorking: false });
+        const task = await this.findOne({ id: taskId });
+
         task.taskStart = new Date();
         task.isWorking = true;
 
@@ -116,10 +116,10 @@ export class TaskService {
      * @returns {Promise<Task>}
      */
     public async finishTask(id: string): Promise<Task> {
-        const task = await this.findOne({id});
-            
+        const task = await this.findOne({ id });
+
         let report;
-        
+
         try {
             report = await this.reportService.findOne({
                 date: new Date().toLocaleDateString().replace(/\//g, '-'),
