@@ -39,7 +39,11 @@ export class AuthController {
 			});
 		}
 
-		res.cookie('access_token', access_token, { httpOnly: true });
+		res.cookie('access_token', access_token, { 
+			httpOnly: true,
+			sameSite: 'none',
+			secure: true
+		});
 
 		return res.status(200).json({
 			status: 'success',
