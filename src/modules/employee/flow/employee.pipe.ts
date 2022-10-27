@@ -14,12 +14,11 @@ export class EmployeePipe extends JoiValidationPipe {
 
         return Joi.object<EmployeeInput>({
             name     : Joi.string().required(),
-            phone    : Joi.string().required().regex(/^[0-9]{10}$/),
+            phone    : Joi.string().required().regex(/^[0-9]{10,12}$/),
             email    : Joi.string().required().email(),
             password : Joi.string().required(),
             position : Joi.string().required(),
-            role     : Joi.valid(...Object.values(Role)).required(),
-            companyId: Joi.string().required(),
+            role     : Joi.valid(...Object.values(Role)).default(Role.EMPLOYEE),
             address  : Joi.string(),
             createdAt: Joi.string().default(new Date().toISOString()),
             updatedAt: Joi.string().default(new Date().toISOString())

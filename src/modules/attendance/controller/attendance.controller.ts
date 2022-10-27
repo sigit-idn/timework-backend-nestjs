@@ -37,7 +37,16 @@ export class AttendanceController {
         description: 'Find all attendances',
         type       : AttendanceData
     })
-    public async find(@Query() where?: FindCondition<Attendance>): Promise<AttendanceData[]> {
+    public async find(
+        @Query() where?: FindCondition<Attendance>|any,
+        @Req() req?: any
+    ): Promise<AttendanceData[]> {
+        const { employeeId } = req.params;
+
+        if (employeeId && !where.employeeId) {
+            where.employeeId = employeeId;
+        }
+        
         const attendances = await this.attendanceService.find(where);
 
         return attendances.map(attendance => attendance.buildData());

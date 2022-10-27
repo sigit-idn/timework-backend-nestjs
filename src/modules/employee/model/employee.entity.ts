@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { EmployeeData                                      } from '.';
 import { Attendance                                        } from '../../attendance/model';
 import { Report                                            } from '../../report/model';
-import { Task } from '../../task/model';
+import { Task                                              } from '../../task/model';
 
 /**
  * @class Employee

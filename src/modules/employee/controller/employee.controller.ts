@@ -80,13 +80,17 @@ export class EmployeeController {
     @Post()
     @ApiResponse({ status: HttpStatus.CREATED, type: EmployeeData })
     @UseGuards(AdminGuard)
-    public async create(@Body(EmployeePipe) input: Employee): Promise<EmployeeData> {
+    public async create(
+        @Body(EmployeePipe) input: Employee,
+        @Req() req?: Request|any
+    ): Promise<EmployeeData> {
+        const { employeeId } = req.params;
 
         if (this.config.EMPLOYEES_ALLOWED === 'no') {
             throw new PreconditionFailedException(`Not allowed to onboard employees`);
         }
 
-        const employee = await this.employeeService.create(input);
+        const employee = await this.employeeService.create(input, employeeId);
         this.logger.info(`Created new employee with ID ${employee.id}`);
 
         return employee.buildData();

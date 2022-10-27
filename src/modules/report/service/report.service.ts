@@ -1,8 +1,8 @@
 import { forwardRef, Inject, Injectable, PreconditionFailedException } from '@nestjs/common';
-import { InjectRepository                        } from '@nestjs/typeorm';
-import { FindCondition, In, Like, Repository         } from 'typeorm';
-import { TaskService } from '../../task/service';
-import { Report, ReportInput                     } from '../model';
+import { InjectRepository                    } from '@nestjs/typeorm';
+import { FindCondition, In, Like, Repository } from 'typeorm';
+import { TaskService                         } from '../../task/service';
+import { Report, ReportInput                 } from '../model';
 
 /**
  * @class ReportService
@@ -25,12 +25,12 @@ export class ReportService {
      * @param {FindCondition<Report>} where
      * @returns {Promise<Report[]>}
      */
-    public async find(where?: FindCondition<Report>): Promise<Report[]> {
-        if (where && (where as any).month) {
-            const month = (where as any).month;
-            delete (where as any).month;
+    public async find(where?: FindCondition<Report>|any): Promise<Report[]> {
+        if (where && where.month) {
+            const month = where.month;
+            delete where.month;
 
-            (where as any).date = Like(`%${month}%`);
+            where.date = Like(`%${month}%`);
         }
         
         const reports = await this.reportRepository.find({ 
@@ -93,7 +93,7 @@ export class ReportService {
             ...input,
         });
 
-        return report;
+        return this.reportRepository.save(report);
     }
 
     /**

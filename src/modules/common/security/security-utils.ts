@@ -5,8 +5,6 @@ import * as jwt from 'jsonwebtoken';
 export function extractTokenPayload(request: Request): any | null {
 
     const token = request.headers.cookie?.replace(/.*access_token=([^;]+).*/, '$1');
-    console.log({token, cookie: request.headers.cookie});
-    
 
     if (!token) return null;
 

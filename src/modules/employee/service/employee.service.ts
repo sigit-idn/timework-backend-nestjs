@@ -1,6 +1,6 @@
 import { Inject, Injectable, PreconditionFailedException } from '@nestjs/common';
 import { InjectRepository                                } from '@nestjs/typeorm';
-import { FindCondition, Repository                       } from 'typeorm';
+import { FindCondition, In, Repository, Not              } from 'typeorm';
 import { Employee                                        } from '../model';
 import { hash, genSalt                                   } from 'bcrypt';
 import { TaskService                                     } from '../../task/service';
@@ -37,7 +37,7 @@ export class EmployeeService {
 
         const employees = await this.employeeRepository.find({ where, relations: ['tasks'] });
 
-        const tasks = await this.taskService.find({ employeeId: employeeId });
+        const tasks = await this.taskService.find({employeeId: In(employees.map(({id}) => id))});
         
         employees.forEach(employee => {
             employee.tasks = tasks.filter(({employeeId}) => employeeId == employee.id)
@@ -66,12 +66,25 @@ export class EmployeeService {
      * @method create
      * @description Create new employee
      * @param {Employee} input
+     * @param {string} employeeId
      * @returns {Promise<Employee>}
      */
-    public async create({password, ...input}: Employee): Promise<Employee> {
+    public async create({password, ...input}: Employee, employeeId: string): Promise<Employee> {
+        const { companyId } = await (await this.findOne({id: employeeId}))
+
+        const isEmployeeExists = await this.employeeRepository.findOne({
+            where: [
+                { phone: input.phone },
+                { email: input.email },
+            ],
+        });
+
+        if (isEmployeeExists) throw new PreconditionFailedException('Employee already exists');
+
         const employee = new Employee({
             ...input,
-            password: await this.hashPassword(password)
+            password: await this.hashPassword(password),
+            companyId,
         })
 
         return this.employeeRepository.save(employee);
@@ -85,6 +98,16 @@ export class EmployeeService {
      */
     public async update({id, password, ...input}: Employee): Promise<Employee> {
         const employee = await this.findOne({id});
+
+        const isEmployeeExists = await this.employeeRepository.findOne({
+            where: [
+                { phone: input.phone },
+                { email: input.email },
+                { id: Not(id) },
+            ],
+        });
+
+        if (isEmployeeExists) throw new PreconditionFailedException('Employee already exists');
 
         employee.set({
             id,
