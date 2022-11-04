@@ -13,6 +13,9 @@ import { TaskModule       } from './task/task.module';
         CommonModule,
         TypeOrmModule.forRoot({
             autoLoadEntities: true,
+            ssl: {
+                rejectUnauthorized: false,
+            }
         }),
         EmployeeModule,
         AttendanceModule,
