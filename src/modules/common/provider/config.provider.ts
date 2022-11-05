@@ -23,7 +23,8 @@ export const configProvider = {
             TYPEORM_ENTITIES: Joi.string().required(),
             JWT_SECRET: Joi.string().required(),
             JWT_ISSUER: Joi.string().required(),
-            EMPLOYEES_ALLOWED: Joi.string().valid('yes', 'no').required()
+            EMPLOYEES_ALLOWED: Joi.string().valid('yes', 'no').required(),
+            TYPEORM_SSL_REJECT_UNAUTHORIZED: Joi.string().valid('true', 'false').default('true')
         });
 
         const result = validationSchema.validate(env);
@@ -43,6 +44,7 @@ export const configProvider = {
             TYPEORM_PASSWORD: `${env.TYPEORM_PASSWORD}`,
             TYPEORM_DATABASE: `${env.TYPEORM_DATABASE}`,
             TYPEORM_ENTITIES: `${env.TYPEORM_ENTITIES}`,
+            TYPEORM_SSL_REJECT_UNAUTHORIZED: `${env.TYPEORM_SSL_REJECT_UNAUTHORIZED}`,
             JWT_SECRET: `${env.JWT_SECRET}`,
             EMPLOYEES_ALLOWED: `${env.EMPLOYEES_ALLOWED}`
         };

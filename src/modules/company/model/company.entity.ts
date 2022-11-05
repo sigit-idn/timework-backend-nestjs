@@ -43,10 +43,10 @@ export class Company {
     @Column({ name: 'company_number', type: 'varchar' })
     public companyNumber: string;
 
-    @Column({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @Column({ name: 'created_at', type: 'varchar', default: () => 'CURRENT_TIMESTAMP' })
     public createdAt: Date;
 
-    @Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @Column({ name: 'updated_at', type: 'varchar', default: () => 'CURRENT_TIMESTAMP' })
     public updatedAt: Date;
 
     @OneToMany(() => Employee, employee => employee.companyId)

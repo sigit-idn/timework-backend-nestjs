@@ -20,6 +20,8 @@ export interface Config {
 
     readonly TYPEORM_ENTITIES: string;
 
+    readonly TYPEORM_SSL_REJECT_UNAUTHORIZED: string;
+
     readonly JWT_SECRET: string;
 
     readonly EMPLOYEES_ALLOWED: string;

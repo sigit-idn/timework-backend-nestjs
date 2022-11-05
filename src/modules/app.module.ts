@@ -1,3 +1,4 @@
+
 import { Module           } from '@nestjs/common';
 import { TypeOrmModule    } from '@nestjs/typeorm';
 import { AttendanceModule } from './attendance/attendance.module';
@@ -8,14 +9,17 @@ import { EmployeeModule   } from './employee/employee.module';
 import { ReportModule     } from './report/report.module';
 import { TaskModule       } from './task/task.module';
 
+
+
+
 @Module({
     imports: [
         CommonModule,
         TypeOrmModule.forRoot({
             autoLoadEntities: true,
             ssl: {
-                rejectUnauthorized: false,
-            }
+                rejectUnauthorized: false
+            },
         }),
         EmployeeModule,
         AttendanceModule,

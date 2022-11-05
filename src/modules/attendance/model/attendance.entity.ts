@@ -43,10 +43,10 @@ export class Attendance {
     @Column({ name: 'break_end', nullable: true })
     public breakEnd: Date;
 
-    @Column({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @Column({ name: 'created_at', type: 'varchar', default: () => 'CURRENT_TIMESTAMP' })
     public createdAt: Date;
 
-    @Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @Column({ name: 'updated_at', type: 'varchar', default: () => 'CURRENT_TIMESTAMP' })
     public updatedAt: Date;
 
     @ManyToOne(_type => Employee, employee => employee.attendances)

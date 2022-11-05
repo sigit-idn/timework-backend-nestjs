@@ -37,22 +37,22 @@ export class Task {
     @Column({ name: 'description', type: 'varchar' })
     public description: string;
 
-    @Column({ name: 'deadline', type: 'timestamp' })
+    @Column({ name: 'deadline', type: 'varchar' })
     public deadline: Date;
 
     @Column({ name: 'isWorking', type: 'boolean', default: false })
     public isWorking: boolean;
 
-    @Column({ name: 'task_start', type: 'timestamp', nullable: true })
+    @Column({ name: 'task_start', type: 'varchar', nullable: true })
     public taskStart: Date|null;
 
-    @Column({ name: 'task_end', type: 'timestamp', nullable: true })
+    @Column({ name: 'task_end', type: 'varchar', nullable: true })
     public taskEnd: Date|null;
 
-    @Column({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @Column({ name: 'created_at', type: 'varchar', default: () => 'CURRENT_TIMESTAMP' })
     public createdAt: Date;
 
-    @Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @Column({ name: 'updated_at', type: 'varchar', default: () => 'CURRENT_TIMESTAMP' })
     public updatedAt: Date;
 
     @ManyToOne(_type => Employee, employee => employee.tasks)
