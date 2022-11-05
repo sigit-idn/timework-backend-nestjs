@@ -21,10 +21,10 @@ export class AttendanceService {
      * @param {FindCondition<Attendance>} where
      * @returns {Promise<Attendance[]>}
      */
-    public async find(where?: FindCondition<Attendance>): Promise<Attendance[]> {
-        if (where && (where as any).month) {
-            const month = (where as any).month;
-            delete (where as any).month;
+    public async find(where?: FindCondition<Attendance>|any): Promise<Attendance[]> {        
+        if (where && where.month) {
+            const month = where.month;
+            delete where.month;
 
             where = {
                 ...where,
