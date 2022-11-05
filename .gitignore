@@ -21,6 +21,9 @@ npm-debug.log
 /dist
 
 # environment
-.env
+.env*
 .env.copy*
 .env.railway
+
+# DS_Store
+.DS_Store
