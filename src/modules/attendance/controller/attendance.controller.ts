@@ -1,6 +1,5 @@
-import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put, Req } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, Param, Put, Req } from '@nestjs/common';
 import { Config, LoggerService               } from '../../common';
-import { EmployeeGuard                       } from '../../common/security';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FindCondition                       } from 'typeorm';
 import { Service                             } from '../../tokens';
@@ -15,7 +14,7 @@ import { AttendanceService                   } from '../service';
 @Controller('attendances')
 @ApiTags('attendance')
 @ApiBearerAuth()
-@UseGuards(EmployeeGuard)
+// @UseGuards(EmployeeGuard)
 export class AttendanceController {
 
     public constructor(
@@ -48,6 +47,9 @@ export class AttendanceController {
         }
         
         const attendances = await this.attendanceService.find(where);
+
+        console.log('attendances', attendances);
+        
 
         return attendances.map(attendance => attendance.buildData());
     }

@@ -1,8 +1,7 @@
-import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put, Req } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, Param, Put, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FindCondition                       } from 'typeorm';
 import { Config, LoggerService               } from '../../common';
-import { EmployeeGuard                       } from '../../common/security';
 import { Service                             } from '../../tokens';
 import { ReportPipe                          } from '../flow';
 import { Report, ReportData                  } from '../model';
@@ -15,7 +14,7 @@ import { ReportService                       } from '../service';
 @Controller('reports')
 @ApiTags('report')
 @ApiBearerAuth()
-@UseGuards(EmployeeGuard)
+// @UseGuards(EmployeeGuard)
 export class ReportController {
 
     public constructor(
@@ -44,6 +43,8 @@ export class ReportController {
         where.employeeId = req.params.employeeId;
         
         const reports = await this.reportService.find(where);
+        console.log('reports', reports);
+        
 
         return reports.map(report => report.buildDataWithRelations());
     }

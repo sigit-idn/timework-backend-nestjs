@@ -2,7 +2,7 @@ import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException,
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FindCondition                       } from 'typeorm';
 import { Config, LoggerService               } from '../../common';
-import { EmployeeGuard, AdminGuard,          } from '../../common/security';
+import { AdminGuard,          } from '../../common/security';
 import { Service                             } from '../../tokens';
 import { EmployeePipe                        } from '../flow';
 import { Employee, EmployeeData              } from '../model';
@@ -15,7 +15,7 @@ import { EmployeeService                     } from '../service';
 @Controller('employees')
 @ApiTags('employee')
 @ApiBearerAuth()
-@UseGuards(EmployeeGuard)
+// @UseGuards(EmployeeGuard)
 export class EmployeeController {
 
     public constructor(
@@ -44,6 +44,8 @@ export class EmployeeController {
     ): Promise<Partial<Employee>[]> {
         const { employeeId } = req.params;
         const employees = await this.employeeService.find(where, employeeId);
+        console.log('employees', employees);
+        
 
         return employees.map(employee => employee.buildRelatedData());
     }

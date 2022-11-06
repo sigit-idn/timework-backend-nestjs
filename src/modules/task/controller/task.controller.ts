@@ -1,8 +1,7 @@
-import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, UseGuards, Param, Put, Req, Delete } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Inject, Post, PreconditionFailedException, Query, Body, Param, Put, Req, Delete } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FindCondition                       } from 'typeorm';
 import { Config, LoggerService               } from '../../common';
-import { EmployeeGuard                       } from '../../common/security';
 import { Service                             } from '../../tokens';
 import { TaskPipe                            } from '../flow';
 import { Task, TaskData                      } from '../model';
@@ -15,7 +14,7 @@ import { TaskService                         } from '../service';
 @Controller('tasks')
 @ApiTags('task')
 @ApiBearerAuth()
-@UseGuards(EmployeeGuard)
+// @UseGuards(EmployeeGuard)
 export class TaskController {
 
     public constructor(
@@ -45,6 +44,8 @@ export class TaskController {
         const { employeeId } = req.query;
         const { employeeId: selfEmployeeId } = req.params;
         const tasks = await this.taskService.find({employeeId: employeeId || selfEmployeeId, ...where});
+
+        console.log('tasks', tasks);
 
         return tasks.map(task => task.buildData());
     }
