@@ -1,6 +1,6 @@
 import { Injectable, PreconditionFailedException } from '@nestjs/common';
 import { InjectRepository                        } from '@nestjs/typeorm';
-import { FindCondition, Like, Repository         } from 'typeorm';
+import { FindCondition, Like, Repository, IsNull } from 'typeorm';
 import { Attendance                              } from '../model';
 
 /**
@@ -21,15 +21,19 @@ export class AttendanceService {
      * @param {FindCondition<Attendance>} where
      * @returns {Promise<Attendance[]>}
      */
-    public async find(where?: FindCondition<Attendance>): Promise<Attendance[]> {
-        if (where && (where as any).month) {
-            const month = (where as any).month;
-            delete (where as any).month;
+    public async find(where?: FindCondition<Attendance> & Record<string, any>): Promise<Attendance[]> {
 
-            where = {
-                ...where,
-                date: Like(`${month}%`),
-            };
+        if (where && Object.keys(where).length) {
+            Object.keys(where).forEach((key: keyof FindCondition<Attendance>) => {
+                if (where[key] === '' || where[key] === 'null') {
+                    where[key] = IsNull();
+                }
+
+                if (key === 'month') {
+                    where.date = Like(`%${where!.month}%`);
+                    delete where!.month;
+                }
+            });
         }
 
         return await this.attendanceRepository.find({ 

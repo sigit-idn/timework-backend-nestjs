@@ -40,7 +40,7 @@ export class Task {
     @Column({ name: 'deadline', type: 'timestamp' })
     public deadline: Date;
 
-    @Column({ name: 'isWorking', type: 'boolean', default: false })
+    @Column({ name: 'is_working', type: 'boolean', default: false })
     public isWorking: boolean;
 
     @Column({ name: 'task_start', type: 'timestamp', nullable: true })

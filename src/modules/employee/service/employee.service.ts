@@ -1,6 +1,6 @@
 import { Inject, Injectable, PreconditionFailedException } from '@nestjs/common';
 import { InjectRepository                                } from '@nestjs/typeorm';
-import { FindCondition, In, Repository, Not              } from 'typeorm';
+import { FindCondition, In, Repository, Not, IsNull      } from 'typeorm';
 import { Employee                                        } from '../model';
 import { hash, genSalt                                   } from 'bcrypt';
 import { TaskService                                     } from '../../task/service';
@@ -27,8 +27,19 @@ export class EmployeeService {
      * @param {string} employeeId
      * @returns {Promise<Employee[]>}
      */
-    public async find(where?: FindCondition<Employee>, employeeId?: string): Promise<Employee[]> {
+    public async find(
+        where?: FindCondition<Employee> & Record<string, any>, 
+        employeeId?: string
+    ): Promise<Employee[]> {
         const companyId = await (await this.findOne({id: employeeId})).companyId
+
+        if (where && Object.keys(where).length) {
+            Object.keys(where).forEach((key: keyof FindCondition<Employee>) => {
+                if (!Boolean(where?.[key]) || where?.[key] === 'null') {
+                    where![key] = IsNull();
+                }
+            });
+        }
 
         where = {
             ...where,

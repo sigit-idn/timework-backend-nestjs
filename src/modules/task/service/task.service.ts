@@ -1,8 +1,8 @@
 import { forwardRef, Inject, Injectable, PreconditionFailedException } from '@nestjs/common';
-import { InjectRepository          } from '@nestjs/typeorm';
-import { FindCondition, Repository } from 'typeorm';
-import { ReportService             } from '../../report/service';
-import { Task                      } from '../model';
+import { InjectRepository                  } from '@nestjs/typeorm';
+import { FindCondition, IsNull, Repository } from 'typeorm';
+import { ReportService                     } from '../../report/service';
+import { Task                              } from '../model';
 
 /**
  * @class TaskService
@@ -24,7 +24,15 @@ export class TaskService {
      * @param {FindCondition<Task>} where
      * @returns {Promise<Task[]>}
      */
-    public async find(where?: FindCondition<Task>): Promise<Task[]> {
+    public async find(where?: FindCondition<Task> & Record<string, any>): Promise<Task[]> {
+        if (where && Object.keys(where).length) {
+            Object.keys(where).forEach((key: keyof FindCondition<Task>) => {
+                if (where[key] === '' || where[key] === 'null') {
+                    where[key] = IsNull();
+                }
+            });
+        }
+
         return this.taskRepository.find({
             where,
             order: {
