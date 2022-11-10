@@ -1,6 +1,6 @@
 import * as Joi from 'joi';
 import { JoiValidationPipe } from '../../common';
-import { ReportInput   } from '../model';
+import { ReportInput       } from '../model';
 
 /**
  * @class ReportPipe

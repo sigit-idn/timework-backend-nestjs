@@ -1,7 +1,7 @@
 import { Injectable, PreconditionFailedException } from '@nestjs/common';
 import { InjectRepository                        } from '@nestjs/typeorm';
 import { FindCondition, Repository               } from 'typeorm';
-import { Company                                    } from '../model';
+import { Company                                 } from '../model';
 
 /**
  * @class CompanyService

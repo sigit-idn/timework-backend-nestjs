@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { AttendanceData                           } from '.';
-import { Employee } from '../../employee/model';
+import { AttendanceData                                    } from '.';
+import { Employee                                          } from '../../employee/model';
 
 /**
  * @class Attendance

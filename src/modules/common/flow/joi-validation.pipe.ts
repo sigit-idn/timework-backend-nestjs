@@ -1,5 +1,5 @@
-import { HttpException, HttpStatus, Injectable, PipeTransform } from '@nestjs/common';
 import * as Joi from 'joi';
+import { HttpException, HttpStatus, Injectable, PipeTransform } from '@nestjs/common';
 
 @Injectable()
 export abstract class JoiValidationPipe implements PipeTransform<unknown> {

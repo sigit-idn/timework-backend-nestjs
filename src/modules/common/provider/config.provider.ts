@@ -2,7 +2,7 @@ import * as Joi from 'joi';
 import * as _ from 'lodash';
 
 import { Service } from '../../tokens';
-import { Config } from '../model';
+import { Config  } from '../model';
 
 export const configProvider = {
 

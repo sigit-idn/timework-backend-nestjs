@@ -1,8 +1,8 @@
 import { Controller, Post, UseGuards, Body, Res } from '@nestjs/common';
-import { Response } from 'express';
-import { GuestGuard  } from '../common';
-import { Employee    } from '../employee/model';
-import { AuthService } from './auth.service';
+import { Response                               } from 'express';
+import { GuestGuard                             } from '../common';
+import { Employee                               } from '../employee/model';
+import { AuthService                            } from './auth.service';
 
 
 /**
@@ -52,6 +52,21 @@ export class AuthController {
 				name,
 				role
 			}
+		});
+	}
+
+	/**
+	 * @method logout
+	 * @description Logout employee
+	 * @returns {Promise<Response<{ message: string }>>}
+	 */
+	@Post('logout')
+	async logout(@Res() res: Response): Promise<Response<{ message: string }>> {
+		res.clearCookie('access_token');
+
+		return res.status(200).json({
+			status: 'success',
+			message: 'Logout successful'
 		});
 	}
 }

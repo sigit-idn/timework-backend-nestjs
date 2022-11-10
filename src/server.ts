@@ -1,8 +1,8 @@
+import * as helmet                        from 'helmet';               // used to secure the application
 import { INestApplication               } from '@nestjs/common';       // an interface which is used to define the application
 import { NestFactory                    } from '@nestjs/core';         // used to create the NestJS application
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';      // used to create the swagger module
 import { json                           } from 'express';              // used to parse the request body
-import * as helmet                        from 'helmet';               // used to secure the application
 import { ApplicationModule              } from './modules/app.module'; // used to import the application module
 import { CommonModule, LogInterceptor   } from './modules/common';     // used to import the common module
 

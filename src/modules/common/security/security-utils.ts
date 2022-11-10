@@ -1,5 +1,5 @@
-import { Request } from 'express';
 import * as jwt from 'jsonwebtoken';
+import { Request } from 'express';
 
 // tslint:disable-next-line:no-any
 export function extractTokenPayload(request: Request): any | null {

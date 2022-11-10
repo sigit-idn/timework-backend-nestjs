@@ -66,7 +66,6 @@ export class AttendanceController {
     })
     async findOne(@Param() { id }: Attendance): Promise<AttendanceData> {
         const attendance = await this.attendanceService.findOne({id});
-        
 
         if (!attendance) {
             throw new PreconditionFailedException('Attendance not found');
@@ -125,6 +124,7 @@ export class AttendanceController {
         const employeeId = req.params.employeeId;
         
         const attendance = await this.attendanceService.workStart(employeeId);
+
         this.logger.info(`Started work with attendance ID ${attendance.id}`);
 
         return attendance.buildData();

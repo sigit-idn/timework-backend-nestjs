@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { TaskData } from '../../task/model';
+import { TaskData    } from '../../task/model';
   
 /**
  * @class ReportData

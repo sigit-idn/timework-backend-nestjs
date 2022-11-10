@@ -1,6 +1,6 @@
 import * as Joi from 'joi';
 import { JoiValidationPipe } from '../../common';
-import { CompanyInput         } from '../model';
+import { CompanyInput      } from '../model';
 
 /**
  * @class CompanyPipe

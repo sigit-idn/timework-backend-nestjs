@@ -1,6 +1,6 @@
 import { Injectable, PreconditionFailedException } from '@nestjs/common';
 import { InjectRepository                        } from '@nestjs/typeorm';
-import { FindCondition, Like, Repository               } from 'typeorm';
+import { FindCondition, Like, Repository         } from 'typeorm';
 import { Attendance                              } from '../model';
 
 /**

@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { ReportData                             } from '.';
-import { Employee } from '../../employee/model';
-import { Task } from '../../task/model';
+import { ReportData } from '.';
+import { Employee   } from '../../employee/model';
+import { Task       } from '../../task/model';
 
 /**
  * @class Report

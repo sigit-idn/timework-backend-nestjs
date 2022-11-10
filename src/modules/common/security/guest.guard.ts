@@ -1,6 +1,6 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import * as _ from 'lodash';
-import { Observable } from 'rxjs';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { Observable                                } from 'rxjs';
 
 @Injectable()
 export class GuestGuard implements CanActivate {

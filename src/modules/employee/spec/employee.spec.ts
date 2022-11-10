@@ -1,9 +1,9 @@
-import { HttpStatus, INestApplication } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import * as jwt from 'jsonwebtoken';
+import * as jwt     from 'jsonwebtoken';
 
-import { ApplicationModule } from '../../app.module';
+import { HttpStatus, INestApplication } from '@nestjs/common';
+import { Test                         } from '@nestjs/testing';
+import { ApplicationModule            } from '../../app.module';
 
 /**
  * Employee API end-to-end tests
