@@ -39,12 +39,14 @@ export class TaskController {
         type       : TaskData
     })
     public async find(
-        @Query() where?: FindCondition<Task>,
+        @Query() where?: FindCondition<Task> & Task,
         @Req() req?: Request|any
     ): Promise<TaskData[]> {
-        const { employeeId } = req.query;
-        const { employeeId: selfEmployeeId } = req.params;
-        const tasks = await this.taskService.find({employeeId: employeeId || selfEmployeeId, ...where});
+        if (where) {
+            where.employeeId = where.employeeId ?? req.params.employeeId
+        }
+        
+        const tasks = await this.taskService.find(where);
 
         return tasks.map(task => task.buildData());
     }

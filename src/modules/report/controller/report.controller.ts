@@ -41,7 +41,7 @@ export class ReportController {
         @Query() where?: FindCondition<Report>|any,
         @Req() req?: Request | any
     ): Promise<ReportData[]> {
-        where.employeeId = req.params.employeeId;
+        where.employeeId = where.employeeId ?? req.params.employeeId;
         
         const reports = await this.reportService.find(where);
 

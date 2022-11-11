@@ -41,11 +41,7 @@ export class AttendanceController {
         @Query() where?: FindCondition<Attendance>|any,
         @Req() req?: any
     ): Promise<AttendanceData[]> {
-        const { employeeId } = req.params;
-
-        if (employeeId && !where.employeeId) {
-            where.employeeId = employeeId;
-        }
+        where.employeeId = where.employeeId ?? req.params.employeeId;
         
         const attendances = await this.attendanceService.find(where);
 
